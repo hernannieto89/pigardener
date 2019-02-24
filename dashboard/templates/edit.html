@@ -1,0 +1,11 @@
+{% if object.activated %}
+<div>{{ object.name}} esta actualmente encendido. Envie la señal de apagado desde el menu principal y luego intente editar nuevamente.</div>
+{% else %}
+<div>{{ object.name }}</div>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+{% endif %}
+<li><a href="{% url 'index'%}">Volver</a></li>

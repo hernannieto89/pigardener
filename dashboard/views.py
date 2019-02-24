@@ -1,6 +1,41 @@
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import UpdateView
+from django.urls import reverse
 
-from django.http import HttpResponse
+from dashboard.forms import SimpleTimerForm
+from dashboard.models import SimpleTimer
 
 
 def index(request):
-    return HttpResponse("Hola humano. Bienvenido.")
+    timers_list = SimpleTimer.objects.all()
+    context = {'timers_list': timers_list}
+    return render(request, 'index.html', context)
+
+
+def switch_status(request, id):
+    simple_timer = SimpleTimer.objects.get(id=id)
+    if simple_timer.activated:
+        #stop_job(simple_timer.process_id)
+        simple_timer.activated = False
+    else:
+        #start_job(simple_timer.process_id)
+        simple_timer.activated = True
+    simple_timer.save()
+    return HttpResponseRedirect(reverse('index'))
+
+
+class EditSimpleTimer(UpdateView):
+    template_name = 'edit.html'
+    form_class = SimpleTimerForm
+    model = SimpleTimer
+
+    def get_initial(self):
+        pass
+
+    def form_valid(self, form):
+        form.save()
+        return super(EditSimpleTimer, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('index')
