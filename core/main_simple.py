@@ -2,8 +2,8 @@
 """
 Simple timer - Main module.
 """
-from core.graceful_killer import GracefulKiller
-from core.helpers import teardown, got_to_work, setup, work, check_sudo,\
+from .graceful_killer import GracefulKiller
+from .helpers import teardown, got_to_work, setup, work, check_sudo,\
     continuous_work, get_remaining_time, get_time_goal
 
 

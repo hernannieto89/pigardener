@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from dashboard.models import SimpleTimer
-from core.helpers import start_job
+from core.runner import start_job
 
 
 urlpatterns = [

@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from dashboard.forms import SimpleTimerForm
 from dashboard.models import SimpleTimer
-from core.helpers import start_job, stop_job
+from core.runner import start_job, stop_job
 
 
 def index(request):
