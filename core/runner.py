@@ -6,7 +6,7 @@ from .main_simple import simple_timer
 
 
 def start_job(timer_instance):
-    process = Process(target=simple_timer, args=(timer_instance.pins, timer_instance.start_time, timer_instance.end_time,
+    process = Process(target=simple_timer, args=(timer_instance.data_pin, timer_instance.start_time, timer_instance.end_time,
                                                  timer_instance.work_time, timer_instance.sleep_time))
     process.start()
     TIMERS_DICT[timer_instance.process_id] = process
