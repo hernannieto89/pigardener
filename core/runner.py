@@ -14,5 +14,6 @@ def start_job(timer_instance):
 
 def stop_job(timer_instance):
     process = TIMERS_DICT[timer_instance.process_id]
-    process.stop()
+    process.terminate()
+    process.join()
     TIMERS_DICT[timer_instance.process_id] = None
