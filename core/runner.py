@@ -12,12 +12,16 @@ def start_job(timer_instance):
     print("START")
     print(process, process.is_alive())
     TIMERS_DICT[timer_instance.process_id] = process
+    print("IM DONE")
 
 
 def stop_job(timer_instance):
     print(TIMERS_DICT)
     print("STOP")
     process = TIMERS_DICT[timer_instance.process_id]
+    print(process, process.is_alive())
+
     process.terminate()
-    process.join()
+    process.close()
     TIMERS_DICT[timer_instance.process_id] = None
+    print("IM DONE")
