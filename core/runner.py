@@ -22,6 +22,5 @@ def stop_job(timer_instance):
     print(process, process.is_alive())
 
     process.terminate()
-    process.close()
     TIMERS_DICT[timer_instance.process_id] = None
     print("IM DONE")
