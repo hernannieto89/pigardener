@@ -16,10 +16,10 @@ def start_job(timer_instance):
 
 
 def stop_job(timer_instance):
-    print(TIMERS_DICT)
     print("STOP")
     process = TIMERS_DICT[timer_instance.process_id]
     process.terminate()
+    print(TIMERS_DICT)
     TIMERS_DICT[timer_instance.process_id] = None
     print(process, process.is_alive())
     print("IM DONE")
