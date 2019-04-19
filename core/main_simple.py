@@ -15,7 +15,7 @@ def simple_timer(pins, start_time, end_time, work_time, sleep_time):
 
     start = start_time
     end = end_time
-    pins = pins
+    pins = list(pins)
     work_time = work_time
     sleep_time = sleep_time
     continuous = sleep_time <= 0
