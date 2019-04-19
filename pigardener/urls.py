@@ -16,7 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from dashboard.models import SimpleTimer
+from core.helpers import start_job
+
+
 urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('admin/', admin.site.urls),
 ]
+
+
+def one_time_startup():
+    timers_list = SimpleTimer.objects.all()
+
+    for timer in timers_list:
+        if timer.activated:
+            start_job(timer.process_id)

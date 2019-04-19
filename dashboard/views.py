@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from dashboard.forms import SimpleTimerForm
 from dashboard.models import SimpleTimer
+from core.helpers import start_job, stop_job
 
 
 def index(request):
@@ -16,10 +17,10 @@ def index(request):
 def switch_status(request, id):
     simple_timer = SimpleTimer.objects.get(id=id)
     if simple_timer.activated:
-        #stop_job(simple_timer.process_id)
+        stop_job(simple_timer)
         simple_timer.activated = False
     else:
-        #start_job(simple_timer.process_id)
+        start_job(simple_timer)
         simple_timer.activated = True
     simple_timer.save()
     return HttpResponseRedirect(reverse('index'))

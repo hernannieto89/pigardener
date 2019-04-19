@@ -7,17 +7,17 @@ from .helpers import teardown, got_to_work, setup, work, check_sudo,\
     continuous_work, get_remaining_time, get_time_goal
 
 
-def simple_timer(pins, start_time, end_time, work_time, sleep_time):
+def simple_timer(timer_instance):
     """
     Simple timer.
     """
     check_sudo()
 
-    start = start_time
-    end = end_time
-    pins = pins
-    work_time = work_time
-    sleep_time = sleep_time
+    start = timer_instance.start_time
+    end = timer_instance.end_time
+    pins = list(timer_instance.pins)
+    work_time = timer_instance.work_time
+    sleep_time = timer_instance.sleep_time
     continuous = sleep_time <= 0
     # setup GPIO
     setup(pins)

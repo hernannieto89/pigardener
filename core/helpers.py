@@ -10,6 +10,11 @@ import RPi.GPIO as GPIO
 
 import Adafruit_DHT
 
+from multiprocessing import Process
+
+from pigardener import TIMERS_DICT
+
+from .main_simple import simple_timer
 
 DELAY_INTERVAL = 5
 MAX_RETRIES = 5
@@ -231,3 +236,16 @@ def register_to_disk(temperature, humidity, message, log_level):
         with open(FILE_NAME, 'a') as the_file:
             the_file.write(message + '\n')
             the_file.write('Temp={0:0.1f}*  Humidity={1:0.1f}%\n'.format(temperature, humidity))
+
+
+def start_job(timer_instance):
+    process = Process(target=simple_timer)
+    process.start()
+    TIMERS_DICT[timer_instance.process_id] = process
+
+
+def stop_job(timer_instance):
+    process = TIMERS_DICT[timer_instance.process_id]
+    process.stop()
+    TIMERS_DICT[timer_instance.process_id] = None
+
