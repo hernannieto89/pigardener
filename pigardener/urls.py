@@ -31,4 +31,8 @@ def one_time_startup():
 
     for timer in timers_list:
         if timer.activated:
-            start_job(timer.process_id)
+            process_id = start_job(timer)
+            timer.process_id = process_id
+            timer.save()
+
+one_time_startup()
