@@ -35,6 +35,8 @@ def teardown(pins):
     Performs GPIO cleanup
     :return: None
     """
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
     for i in pins:
         GPIO.output(i, GPIO.HIGH)
         GPIO.cleanup(i)
@@ -100,8 +102,7 @@ def continuous_work(remaining_time, pins, on_time):
             if GPIO.input(i) != GPIO.HIGH:
                 GPIO.setup(i, GPIO.OUT)
                 GPIO.output(i, GPIO.HIGH)
-    time.sleep(remaining_time)
-
+    #time.sleep(remaining_time)
 
 def get_remaining_time(time_goal):
     """

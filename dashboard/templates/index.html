@@ -4,10 +4,10 @@
         <h2> {{ timer.name }} </h2>
         <h3> Hora de inicio: {{ timer.start_time }} Hrs </h3>
         <h3> Hora de finalización: {{ timer.end_time }} Hrs </h3>
-        <h3> Tiempo de trabajo: {{ timer.work_time }} Minutos </h3>
-        <h3> Tiempo de descanzo (Cero para trabajo continuo): {{ timer.sleep_time }} Minutos</h3>
+        <h3> Tiempo de trabajo: {{ timer.work_time }} Segundos </h3>
+        <h3> Tiempo de descanzo (Cero para trabajo continuo): {{ timer.sleep_time }} Segundos</h3>
         <h3> Estado actual: {% if timer.activated %} Encendido {% else %} Apagado {% endif %} </h3>
-        <h3> DEBUG:PROCESS_ID{{ timer.process_id }} </h3>
+        <h3> PROCESS_ID:{{ timer.process_id }} </h3>
         <li><a href="{% url 'edit' timer.id %}">Editar</a></li>
         <li><a href="{% url 'switch_status' timer.id %}">{% if timer.activated %} Apagar {% else %} Encender {% endif %}</a></li>
     {% endfor %}

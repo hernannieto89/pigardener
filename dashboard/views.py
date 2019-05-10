@@ -18,9 +18,11 @@ def switch_status(request, id):
     simple_timer = SimpleTimer.objects.get(id=id)
     if simple_timer.activated:
         stop_job(simple_timer)
+        simple_timer.process_id = -1
         simple_timer.activated = False
     else:
-        start_job(simple_timer)
+        pid = start_job(simple_timer)
+        simple_timer.process_id = pid
         simple_timer.activated = True
     simple_timer.save()
     return HttpResponseRedirect(reverse('index'))

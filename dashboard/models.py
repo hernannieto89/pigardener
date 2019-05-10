@@ -15,7 +15,7 @@ class MetaTimer(models.Model):
 
 class SimpleTimer(MetaTimer):
     name = models.CharField(max_length=200, unique=True)
-    process_id = models.IntegerField(unique=True)
+    process_id = models.IntegerField(unique=False)
     activated = models.BooleanField(default=False)
 
 
