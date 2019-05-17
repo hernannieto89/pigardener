@@ -1,13 +1,17 @@
-import os
-import signal
+import logging
+
 import psutil
-import json
 import RPi.GPIO as GPIO
 
 from subprocess import Popen
 
+logger = logging.getLogger(__name__)
 
-SIMPLE_TIMER_TEMPLATE = "sudo python3 /home/pi/Desktop/pigardener/core/scripts/main_simple.py --pins {} --start_time {} --end_time {} --work_time {} --sleep_time {} &"
+SIMPLE_TIMER_PATH = "/home/pi/Desktop/pigardener/core/scripts/main_simple.py"
+
+SIMPLE_TIMER_ARGS = "--pins {} --start_time {} --end_time {} --work_time {} --sleep_time {} --name {}"
+
+SIMPLE_TIMER_EXC = "sudo python3 {} {} &".format(SIMPLE_TIMER_PATH, SIMPLE_TIMER_ARGS)
 
 
 def teardown(pins):
@@ -22,27 +26,34 @@ def teardown(pins):
         GPIO.output(i, GPIO.HIGH)
         GPIO.cleanup(i)
 
+
 def kill(proc_pid):
-    #print(proc_pid)
     process = psutil.Process(proc_pid)
-    #print(process)
     for proc in process.children(recursive=True):
-        #print('children')
-        #print(proc.pid)
         proc.kill()
     process.kill()
 
+
 def start_job(timer_instance):
-    process = Popen([SIMPLE_TIMER_TEMPLATE.format(timer_instance.data_pin,
+    result = None
+    try:
+        process = Popen([SIMPLE_TIMER_EXC.format(timer_instance.data_pin,
                                                  timer_instance.start_time,
                                                  timer_instance.end_time,
                                                  timer_instance.work_time,
-                                                 timer_instance.sleep_time)], shell=True)
-    return process.pid + 1
+                                                 timer_instance.sleep_time,
+                                                 timer_instance.name)], shell=True)
+        result = process.pid + 1
+        logger.info("Process {} started".format(result))
+    except Exception as err:
+        logger.info("Error starting job: {}".format(err))
+    return result
+
 
 def stop_job(timer_instance):
     try:
         kill(timer_instance.process_id)
         teardown([timer_instance.data_pin])
+        logger.info("Process {} stopped".format(timer_instance.process_id))
     except Exception as err:
-        print(err)
+        logger.info("Error stopping job: {}".format(err))

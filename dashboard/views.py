@@ -22,8 +22,9 @@ def switch_status(request, id):
         simple_timer.activated = False
     else:
         pid = start_job(simple_timer)
-        simple_timer.process_id = pid
-        simple_timer.activated = True
+        if pid:
+            simple_timer.process_id = pid
+            simple_timer.activated = True
     simple_timer.save()
     return HttpResponseRedirect(reverse('index'))
 

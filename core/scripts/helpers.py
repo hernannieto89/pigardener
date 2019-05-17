@@ -6,10 +6,10 @@ import os
 import sys
 import datetime
 import time
+import pytz
 import RPi.GPIO as GPIO
 
 import Adafruit_DHT
-
 
 DELAY_INTERVAL = 5
 MAX_RETRIES = 5
@@ -42,38 +42,49 @@ def teardown(pins):
         GPIO.cleanup(i)
 
 
-def got_to_work(start, end):
+def got_to_work(start, end, logger):
     """
     Ask if actual hour is within start - end range.
     :param start:
     :param end:
+    :param logger:
     :return: Boolean
     """
-    now = datetime.datetime.now()
+    logger.debug("Fetching timezone")
+    timezone = pytz.timezone('America/Argentina/Cordoba')
+    logger.debug("Timezone set to {}".format(timezone.zone))
+    now = datetime.datetime.now(timezone)
     now_time = now.time()
     start_time = datetime.time(start)
     end_time = datetime.time(end)
 
+    logger.debug("Performing time check: now {}, now_time {}, start_time {}, end_time {}".format(now,
+                                                                                                 now_time,
+                                                                                                 start_time,
+                                                                                                 end_time))
     if start_time < end_time:
         return now_time >= start_time and now_time <= end_time
     # Over midnight
     return now_time >= start_time or now_time <= end_time
 
 
-def work(work_time, sleep_time, pins):
+def work(work_time, sleep_time, pins, logger):
     """
     Performs job for work_time, sleeps for sleep_time.
     :param work_time:
     :param sleep_time:
     :param pins:
+    :param logger:
     :return: None
     """
+    logger.info('Starting work cycle. {} seconds left'.format(work_time))
     for i in pins:
         GPIO.setup(i, GPIO.IN)
         if GPIO.input(i) != GPIO.LOW:
             GPIO.setup(i, GPIO.OUT)
             GPIO.output(i, GPIO.LOW)
     time.sleep(work_time)
+    logger.info('Starting sleep cycle. {} seconds left'.format(sleep_time))
     for i in pins:
         GPIO.setup(i, GPIO.IN)
         if GPIO.input(i) != GPIO.HIGH:
@@ -82,27 +93,31 @@ def work(work_time, sleep_time, pins):
     time.sleep(sleep_time)
 
 
-def continuous_work(remaining_time, pins, on_time):
+def continuous_work(remaining_time, pins, on_time, logger):
     """
     Performs job if needed and waits for remaining time.
     :param remaining_time:
     :param on_time:
     :param pins:
+    :param logger:
     :return: None
     """
     if on_time:
+        logger.info('Starting continuous work. {} seconds left'.format(remaining_time))
         for i in pins:
             GPIO.setup(i, GPIO.IN)
             if GPIO.input(i) != GPIO.LOW:
                 GPIO.setup(i, GPIO.OUT)
                 GPIO.output(i, GPIO.LOW)
     else:
+        logger.info('Starting continuous sleep. {} seconds left'.format(remaining_time))
         for i in pins:
             GPIO.setup(i, GPIO.IN)
             if GPIO.input(i) != GPIO.HIGH:
                 GPIO.setup(i, GPIO.OUT)
                 GPIO.output(i, GPIO.HIGH)
-    #time.sleep(remaining_time)
+    time.sleep(remaining_time)
+
 
 def get_remaining_time(time_goal):
     """
@@ -110,7 +125,8 @@ def get_remaining_time(time_goal):
     :param time_goal:
     :return: remaining_time
     """
-    now = datetime.datetime.now()
+    timezone = pytz.timezone('America/Argentina/Cordoba')
+    now = datetime.datetime.now(timezone)
     return (datetime.timedelta(hours=24) - (now - now.replace(hour=time_goal,
                                                               minute=0,
                                                               second=0,
