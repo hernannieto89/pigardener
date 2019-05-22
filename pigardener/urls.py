@@ -32,13 +32,14 @@ urlpatterns = [
 def one_time_startup():
     timers_list = SimpleTimer.objects.all()
 
-    for timer in timers_list:
-        if timer.activated:
-            logger.info('Startup - Activating Timer {}'.format(timer.name))
-            process_id = start_job(timer)
-            timer.process_id = process_id
-            timer.save()
-            logger.info('Startup - Timer {} activated at Process {}'.format(timer.name, timer.process_id))
-
-
+    try:
+        for timer in timers_list:
+            if timer.activated:
+                logger.info('Startup - Activating Timer {}'.format(timer.name))
+                process_id = start_job(timer)
+                timer.process_id = process_id
+                timer.save()
+                logger.info('Startup - Timer {} activated at Process {}'.format(timer.name, timer.process_id))
+    except Exception as err:
+        print(err)  #  Add OperationalError instead of Exception. Leave explanation.
 one_time_startup()

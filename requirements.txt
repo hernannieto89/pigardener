@@ -1,0 +1,4 @@
+psutil
+pytz
+django
+Adafruit_DHT
