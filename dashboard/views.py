@@ -10,7 +10,10 @@ from core.runner import start_job, stop_job
 
 def index(request):
     timers_list = SimpleTimer.objects.all()
-    context = {'timers_list': timers_list}
+    context = {
+        'timers_list': timers_list,
+        'url': reverse('index')
+        }
     return render(request, 'index.html', context)
 
 
