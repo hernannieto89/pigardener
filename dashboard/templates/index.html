@@ -1,17 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+<h2>PiGreen</h2>
 {% if timers_list %}
-    <ul>
+<table>
+    <tr>
+      <th>Timer</th>
+      <th>Hora de inicio</th>
+      <th>Hora de finalización</th>
+      <th>Tiempo de trabajo</th>
+      <th>Tiempo de descanzo</th>
+      <th>Estado actual</th>
+      <th>Process</th>
+      <th>Editar</th>
+      <th>Apagar</th>
+
+    </tr>
     {% for timer in timers_list %}
-        <h2> {{ timer.name }} </h2>
-        <h3> Hora de inicio: {{ timer.start_time }} Hrs </h3>
-        <h3> Hora de finalización: {{ timer.end_time }} Hrs </h3>
-        <h3> Tiempo de trabajo: {{ timer.work_time }} Segundos </h3>
-        <h3> Tiempo de descanzo (Cero para trabajo continuo): {{ timer.sleep_time }} Segundos</h3>
-        <h3> Estado actual: {% if timer.activated %} Encendido {% else %} Apagado {% endif %} </h3>
-        <h3> PROCESS_ID:{{ timer.process_id }} </h3>
-        <li><a href="{% url 'edit' timer.id %}">Editar</a></li>
-        <li><a href="{% url 'switch_status' timer.id %}">{% if timer.activated %} Apagar {% else %} Encender {% endif %}</a></li>
+    <tr>
+        <td>{{ timer.name }}</td>
+        <td>{{ timer.start_time }} Hrs</td>
+        <td>{{ timer.end_time }} Hrs </td>
+        <td>{{ timer.work_time }} Segundos</td>
+        <td>{{ timer.sleep_time }} Segundos</td>
+        <td>{% if timer.activated %} Encendido {% else %} Apagado {% endif %}</td>
+        <td>{{ timer.process_id }}</td>
+        <td><a href="{% url 'edit' timer.id %}">Editar</a></td>
+        <td><a href="{% url 'switch_status' timer.id %}">{% if timer.activated %} Apagar {% else %} Encender {% endif %}</a></td>
+    </tr>
     {% endfor %}
-    </ul>
+</table>
 {% else %}
     <p>No timers configured.</p>
 {% endif %}
+</body>
+</html>
