@@ -41,7 +41,7 @@ window.setTimeout(function () {
     }
     </script>
 </head>
-<body>
+<body onload="startTime()">
 <h2>PiGreen</h2>
 {% if timers_list %}
 <table>
@@ -74,11 +74,11 @@ window.setTimeout(function () {
 {% else %}
     <p>No timers configured.</p>
 {% endif %}
-</body>
 
-
-<footer onload="startTime()">
+<footer>
     <div id="txt"></div>
 </footer>
+
+</body>
 
 </html>
