@@ -38,7 +38,8 @@ def switch_status(request, id):
 def get_th():
     try:
         msg = requests.get("localhost:8080/get_weather")
-    except:
+    except Exception as err:
+        print(err)
         msg = "Please retry"
     return msg
 
