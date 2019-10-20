@@ -1,5 +1,7 @@
 import requests
 
+from requests.exceptions import HTTPError
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import UpdateView
@@ -37,9 +39,11 @@ def switch_status(request, id):
 
 def get_th():
     try:
-        msg = requests.get("http://localhost:8080/get_weather")
-    except Exception as err:
-        print(err)
+        response = requests.get("http://localhost:8080/get_weather")
+        response.raise_for_status()
+        msg = response.text
+    except (HTTPError, Exception) as http_err:
+        print(f'Error occurred: {http_err}')
         msg = "Please retry"
     return msg
 
