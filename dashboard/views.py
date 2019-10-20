@@ -1,3 +1,5 @@
+import requests
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import UpdateView
@@ -12,7 +14,8 @@ def index(request):
     timers_list = SimpleTimer.objects.all()
     context = {
         'timers_list': timers_list,
-        'url': reverse('index')
+        'url': reverse('index'),
+        'th_message': get_th()
         }
     return render(request, 'index.html', context)
 
@@ -30,6 +33,14 @@ def switch_status(request, id):
             simple_timer.activated = True
     simple_timer.save()
     return HttpResponseRedirect(reverse('index'))
+
+
+def get_th():
+    try:
+        msg = requests.get("localhost:8080/get_weather")
+    except:
+        msg = "Please retry"
+    return msg
 
 
 class EditSimpleTimer(UpdateView):
